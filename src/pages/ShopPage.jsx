@@ -15,8 +15,10 @@ export default function ShopPage() {
 
   const inputRef = useRef(null);
   useEffect(() => {
-    inputRef.current.focus();
-  }, []);
+    if (!loading) {
+      inputRef.current?.focus();
+    }
+  }, [loading]);
 
   const handleClear = useCallback(() => {
     setSearchText("");

@@ -17,7 +17,7 @@ export function useProducts() {
     // fetch() is the browser's built-in way to make an HTTP request. It
     // returns a Promise — a value that isn't ready yet, but will
     // "resolve" later with the real response.
-    fetch("https://fakestoreapi.com/products")
+    fetch ("https://fakestoreapi.com/products")
       .then((res) => {
         // res.ok is false for error status codes (404, 500, etc). fetch
         // does NOT automatically treat those as errors — we have to
