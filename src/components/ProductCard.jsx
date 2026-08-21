@@ -1,20 +1,20 @@
 import { memo, useState } from "react";
 import { Link } from "react-router-dom";
-import { Plus, Check } from "lucide-react";
+import { Plus, Check, Heart } from "lucide-react";
 import { useCart } from "../context/CartContext";
+import { useWishlist } from "../context/WishlistContext";
 import Toast from "./Toast";
+import StarRating from "./StarRating";
 
 // "product" is passed PARENT (ProductGrid) -> CHILD (this component).
-// Real API fields are different from our old hardcoded ones: "title"
-// instead of "name", "image" (a real URL) instead of an emoji, plus
-// "category" and "rating" that we didn't have before.
+// Real API fields: "title", "image" (a real URL), "category", and
+// "rating" (an object: { rate, count }).
 function ProductCardImpl({ product }) {
   const { cart, dispatch } = useCart();
+  const { isWishlisted, toggleWishlist } = useWishlist();
   const inCart = cart.find((item) => item.id === product.id);
+  const wishlisted = isWishlisted(product.id);
 
-  // Local state just for THIS card's toast — each card manages its own,
-  // rather than sharing one global toast across the whole app. Simpler
-  // for now; a bigger app might centralize this in its own context.
   const [showToast, setShowToast] = useState(false);
 
   function handleAdd() {
@@ -23,25 +23,42 @@ function ProductCardImpl({ product }) {
   }
 
   return (
-    <div className="bg-white border border-neutral-200 rounded-xl p-4 flex flex-col gap-3">
-      {/* Link wraps the image + title, navigating to this product's own
-          page. to={`/product/${product.id}`} builds the URL dynamically
-          from this specific product's id. */}
+    <div className="relative bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl p-4 flex flex-col gap-3">
+      {/* Wishlist heart button — positioned absolutely so it floats in
+          the top-right corner over the card, independent of the normal
+          layout flow. stopPropagation prevents the click from also
+          triggering the Link below it (they're visually overlapping). */}
+      <button
+        onClick={(e) => {
+          e.preventDefault(); // don't navigate if this sits inside a Link
+          e.stopPropagation();
+          toggleWishlist(product.id);
+        }}
+        className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white/80 dark:bg-neutral-900/80 backdrop-blur-sm"
+      >
+        <Heart
+          size={16}
+          // Filled red heart if wishlisted, plain outline otherwise —
+          // exactly the same "conditional styling based on state"
+          // pattern as the Add button's checkmark.
+          className={wishlisted ? "fill-red-500 text-red-500" : "text-neutral-400"}
+        />
+      </button>
+
       <Link to={`/product/${product.id}`}>
-        <div className="h-32 flex items-center justify-center bg-neutral-50 rounded-lg p-2">
-          {/* Real image URL from the API now, instead of an emoji */}
-          <img
-            src={product.image}
-            alt={product.title}
-            className="h-full object-contain"
-          />
+        <div className="h-32 flex items-center justify-center bg-neutral-50 dark:bg-neutral-900 rounded-lg p-2">
+          <img src={product.image} alt={product.title} className="h-full object-contain" />
         </div>
-        <h2 className="font-medium text-sm mt-3 line-clamp-2">{product.title}</h2>
+        <h2 className="font-medium text-sm mt-3 line-clamp-2 dark:text-white">{product.title}</h2>
       </Link>
-      <p className="text-neutral-500 text-sm">${product.price.toFixed(2)}</p>
+
+      {/* Star rating, straight from the API's product.rating object */}
+      <StarRating rate={product.rating?.rate} count={product.rating?.count} />
+
+      <p className="text-neutral-500 dark:text-neutral-400 text-sm">${product.price.toFixed(2)}</p>
       <button
         onClick={handleAdd}
-        className="mt-auto flex items-center justify-center gap-1.5 bg-neutral-900 text-white text-sm py-2 rounded-lg hover:bg-neutral-700 transition-colors"
+        className="mt-auto flex items-center justify-center gap-1.5 bg-neutral-900 dark:bg-white dark:text-neutral-900 text-white text-sm py-2 rounded-lg hover:bg-neutral-700 dark:hover:bg-neutral-200 transition-colors"
       >
         {inCart ? (
           <>
@@ -54,9 +71,6 @@ function ProductCardImpl({ product }) {
         )}
       </button>
 
-      {/* Conditional rendering: only mount the Toast while showToast is
-          true. onDone flips it back to false, which unmounts the Toast
-          entirely — its portal content disappears from document.body. */}
       {showToast && (
         <Toast message="Added to cart!" onDone={() => setShowToast(false)} />
       )}

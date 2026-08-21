@@ -9,7 +9,7 @@ function ClearSearchButtonImpl({ onClear }) {
   return (
     <button
       onClick={onClear}
-      className="flex items-center gap-1 text-xs text-neutral-400 hover:text-neutral-700"
+      className="flex items-center gap-1 text-xs text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200"
     >
       <X size={12} /> Clear search
     </button>

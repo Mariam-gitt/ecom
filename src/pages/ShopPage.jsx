@@ -80,7 +80,7 @@ export default function ShopPage() {
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="text-sm border border-neutral-200 rounded-lg px-3 py-2 capitalize"
+          className="text-sm border border-neutral-200 dark:border-neutral-700 dark:bg-neutral-800 dark:text-white rounded-lg px-3 py-2 capitalize"
         >
           {categories.map((c) => (
             <option key={c} value={c} className="capitalize">
@@ -92,7 +92,7 @@ export default function ShopPage() {
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
-          className="text-sm border border-neutral-200 rounded-lg px-3 py-2"
+          className="text-sm border border-neutral-200 dark:border-neutral-700 dark:bg-neutral-800 dark:text-white rounded-lg px-3 py-2"
         >
           <option value="default">Sort: default</option>
           <option value="price-asc">Price: low to high</option>

@@ -8,7 +8,7 @@ export default function ClearCartButton() {
   return (
     <button
       onClick={() => dispatch({ type: "CLEAR" })}
-      className="mt-3 text-xs text-neutral-400 hover:text-red-500"
+      className="mt-3 text-xs text-neutral-400 hover:text-red-500 dark:text-neutral-500"
     >
       Clear cart
     </button>

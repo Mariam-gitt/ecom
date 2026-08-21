@@ -1,13 +1,15 @@
 import { useEffect } from "react";
-import { ShoppingCart } from "lucide-react";
-// Link works like <a href>, but instead of a full page reload, it swaps
-// the URL and re-renders just the matching Route's component — much
-// faster, and it doesn't lose any in-memory React state (like the cart).
+import { ShoppingCart, Heart, Sun, Moon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { useWishlist } from "../context/WishlistContext";
+import { useTheme } from "../context/ThemeContext";
 
 export default function Header() {
   const { cart } = useCart();
+  const { wishlistIds } = useWishlist();
+  const { isDark, toggleTheme } = useTheme();
+
   const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
   const totalPrice = cart
     .reduce((sum, item) => sum + item.price * item.qty, 0)
@@ -18,22 +20,40 @@ export default function Header() {
   }, [totalItems]);
 
   return (
-    <header className="sticky top-0 z-10 bg-white border-b border-neutral-200">
+    <header className="sticky top-0 z-10 bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800 transition-colors">
       <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
-        {/* Link to="/" — clicking this navigates home WITHOUT a full
-            page reload. Using a plain <a href="/"> here would work
-            visually but reload the whole page, wiping the cart's React
-            state (since it only lives in memory, not in the URL). */}
-        <Link to="/" className="text-lg font-semibold tracking-tight">
+        <Link to="/" className="text-lg font-semibold tracking-tight dark:text-white">
           useContext Shop
         </Link>
-        <nav className="flex items-center gap-4">
-          {/* A second Link, styled as a pill showing the live cart
-              totals. Still driven by the SAME context as before —
-              routing doesn't change where cart data comes from. */}
+        <nav className="flex items-center gap-3">
+          {/* Dark mode toggle — a plain button, no navigation involved,
+              just calls toggleTheme() from context. isDark decides
+              which icon shows: sun (to switch TO light) in dark mode,
+              moon (to switch TO dark) in light mode. */}
+          <button
+            onClick={toggleTheme}
+            className="w-9 h-9 flex items-center justify-center rounded-full border border-neutral-200 dark:border-neutral-700 dark:text-white"
+          >
+            {isDark ? <Sun size={16} /> : <Moon size={16} />}
+          </button>
+
+          {/* Wishlist link with a live count badge, same pattern as the
+              cart pill below it. */}
+          <Link
+            to="/wishlist"
+            className="relative w-9 h-9 flex items-center justify-center rounded-full border border-neutral-200 dark:border-neutral-700 dark:text-white"
+          >
+            <Heart size={16} />
+            {wishlistIds.length > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
+                {wishlistIds.length}
+              </span>
+            )}
+          </Link>
+
           <Link
             to="/cart"
-            className="flex items-center gap-2 bg-neutral-900 text-white px-4 py-2 rounded-full text-sm hover:bg-neutral-700 transition-colors"
+            className="flex items-center gap-2 bg-neutral-900 dark:bg-white dark:text-neutral-900 text-white px-4 py-2 rounded-full text-sm hover:bg-neutral-700 dark:hover:bg-neutral-200 transition-colors"
           >
             <ShoppingCart size={16} />
             <span>{totalItems} items</span>

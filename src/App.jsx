@@ -1,42 +1,41 @@
 import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "./context/CartContext";
+import { WishlistProvider } from "./context/WishlistContext";
+import { ThemeProvider, useTheme } from "./context/ThemeContext";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import Header from "./components/Header";
 import ShopPage from "./pages/ShopPage";
 import CartPage from "./pages/CartPage";
 import ProductDetailPage from "./pages/ProductDetailPage";
+import WishlistPage from "./pages/WishlistPage";
 
-// React.lazy() creates a component whose CODE isn't downloaded until it
-// is actually rendered for the first time. Instead of a normal:
-//   import CheckoutPage from "./pages/CheckoutPage";
-// this wraps a dynamic import() in a function — that import() only
-// actually runs the first time <CheckoutPage /> gets rendered.
 const CheckoutPage = lazy(() => import("./pages/CheckoutPage"));
 
-export default function App() {
+// Split into its own inner component so it can call useTheme() —
+// ThemeProvider has to be an ANCESTOR of whatever reads isDark, and App
+// itself renders ThemeProvider, so App can't read from it directly.
+function AppShell() {
+  const { isDark } = useTheme();
+
   return (
-    <CartProvider>
-      <BrowserRouter>
-        <div className="min-h-screen bg-neutral-50 text-neutral-900">
+    <BrowserRouter>
+      {/* "dark" class toggled on this root div is what activates every
+          dark: variant className throughout the app (thanks to
+          darkMode: "class" in tailwind.config.js). One class, applied
+          once, cascades to every dark: utility used anywhere below it. */}
+      <div className={isDark ? "dark" : ""}>
+        <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 text-neutral-900 transition-colors">
           <Header />
-          {/* ErrorBoundary wraps everything below Header — if ANY page
-              or component inside here crashes while rendering, this
-              shows a fallback message instead of a blank white screen.
-              Header stays OUTSIDE it on purpose, so navigation still
-              works even if a page below it breaks. */}
           <ErrorBoundary>
             <Routes>
               <Route path="/" element={<ShopPage />} />
               <Route path="/product/:id" element={<ProductDetailPage />} />
+              <Route path="/wishlist" element={<WishlistPage />} />
               <Route path="/cart" element={<CartPage />} />
               <Route
                 path="/checkout"
                 element={
-                  // Suspense shows "fallback" for however long it takes
-                  // to download CheckoutPage's code, the FIRST time
-                  // someone visits this route. Every visit after that,
-                  // it's already downloaded and shows instantly.
                   <Suspense fallback={<p className="max-w-4xl mx-auto px-6 py-12 text-center text-neutral-400">Loading checkout...</p>}>
                     <CheckoutPage />
                   </Suspense>
@@ -45,7 +44,19 @@ export default function App() {
             </Routes>
           </ErrorBoundary>
         </div>
-      </BrowserRouter>
+      </div>
+    </BrowserRouter>
+  );
+}
+
+export default function App() {
+  return (
+    <CartProvider>
+      <WishlistProvider>
+        <ThemeProvider>
+          <AppShell />
+        </ThemeProvider>
+      </WishlistProvider>
     </CartProvider>
   );
 }

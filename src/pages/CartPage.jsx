@@ -24,14 +24,14 @@ export default function CartPage() {
 
   return (
     <main className="max-w-4xl mx-auto px-6 py-8 space-y-4">
-      <h2 className="text-sm font-medium text-neutral-500">Your cart</h2>
+      <h2 className="text-sm font-medium text-neutral-500 dark:text-neutral-400">Your cart</h2>
       <CartPanel />
       <div className="flex items-center justify-between">
         <ClearCartButton />
         {cart.length > 0 && (
           <button
             onClick={handleCheckout}
-            className="bg-neutral-900 text-white text-sm px-4 py-2 rounded-lg hover:bg-neutral-700 transition-colors"
+            className="bg-neutral-900 dark:bg-white dark:text-neutral-900 text-white text-sm px-4 py-2 rounded-lg hover:bg-neutral-700 dark:hover:bg-neutral-200 transition-colors"
           >
             Proceed to checkout
           </button>
@@ -40,7 +40,7 @@ export default function CartPage() {
       {/* A plain Link back to shopping, for comparison against the
           navigate() call above — both end up changing the URL, just
           triggered differently. */}
-      <Link to="/" className="block text-xs text-neutral-400 hover:text-neutral-700">
+      <Link to="/" className="block text-xs text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200">
         ← Continue shopping
       </Link>
     </main>
