@@ -9,6 +9,7 @@ import ShopPage from "./pages/ShopPage";
 import CartPage from "./pages/CartPage";
 import ProductDetailPage from "./pages/ProductDetailPage";
 import WishlistPage from "./pages/WishlistPage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 const CheckoutPage = lazy(() => import("./pages/CheckoutPage"));
 
@@ -41,6 +42,10 @@ function AppShell() {
                   </Suspense>
                 }
               />
+              {/* "*" matches ANY path not caught by a Route above it —
+                  this MUST be last, since Routes stops at the first
+                  match it finds, checked top to bottom. */}
+              <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </ErrorBoundary>
         </div>
