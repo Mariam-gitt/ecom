@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { Mic } from "lucide-react";
 import { useProducts } from "../hooks/useProducts";
+import { useVoiceSearch } from "../hooks/useVoiceSearch";
 import SearchBar from "../components/SearchBar";
 import ClearSearchButton from "../components/ClearSearchButton";
 import ProductGrid from "../components/ProductGrid";
 
 export default function ShopPage() {
-  // Real data now, instead of a hardcoded array — loading/error handled
-  // right here, exactly like the pattern from useProducts.js.
   const { products, loading, error } = useProducts();
 
   const [searchText, setSearchText] = useState("");
@@ -28,20 +28,38 @@ export default function ShopPage() {
     setSearchText(e.target.value);
   }
 
-  // Derive the unique list of categories FROM the fetched products,
-  // instead of hardcoding them — so this automatically stays correct
-  // even if the API's categories ever change.
   const categories = useMemo(() => {
     const unique = new Set(products.map((p) => p.category));
     return ["all", ...unique];
   }, [products]);
 
-  // This is the useMemo payoff: filtering + sorting a list is real work
-  // (looping over every product, more than once). Without useMemo, this
-  // ENTIRE block would re-run on every single render of ShopPage — even
-  // renders caused by something totally unrelated. useMemo caches the
-  // result and only recalculates when one of the listed dependencies
-  // (products, searchText, category, sortBy) actually changes.
+  // This is the "smart parsing" part — NOT a real AI call, just
+  // keyword-matching the transcribed text against known categories and
+  // a couple of price-related phrases. Genuinely simple string logic,
+  // dressed up to feel a bit smarter than a plain search box.
+  function handleVoiceResult(transcript) {
+    const lower = transcript.toLowerCase();
+
+    // .find() checks each real category name against the spoken text —
+    // if the user said "show me electronics", this catches "electronics".
+    const matchedCategory = categories.find(
+      (c) => c !== "all" && lower.includes(c)
+    );
+    if (matchedCategory) setCategory(matchedCategory);
+
+    if (lower.includes("cheap") || lower.includes("affordable") || lower.includes("lowest price")) {
+      setSortBy("price-asc");
+    } else if (lower.includes("expensive") || lower.includes("highest price")) {
+      setSortBy("price-desc");
+    }
+
+    // Whatever was said also becomes the search text, same as typing —
+    // so even words with no special meaning still filter by title.
+    setSearchText(transcript);
+  }
+
+  const { isListening, isSupported, startListening } = useVoiceSearch(handleVoiceResult);
+
   const visibleProducts = useMemo(() => {
     let result = products.filter((p) =>
       p.title.toLowerCase().includes(searchText.toLowerCase())
@@ -52,8 +70,6 @@ export default function ShopPage() {
     }
 
     if (sortBy === "price-asc") {
-      // [...result] copies the array first — .sort() mutates in place,
-      // and we never want to mutate state or a value derived from it.
       result = [...result].sort((a, b) => a.price - b.price);
     } else if (sortBy === "price-desc") {
       result = [...result].sort((a, b) => b.price - a.price);
@@ -73,10 +89,25 @@ export default function ShopPage() {
     <main className="max-w-4xl mx-auto px-6 py-8">
       <div className="flex flex-wrap items-center gap-3 mb-4">
         <SearchBar value={searchText} onChange={handleSearchChange} inputRef={inputRef} />
+
+        {/* Only show the mic button at all if the browser supports it —
+            no point offering a button that would just silently fail. */}
+        {isSupported && (
+          <button
+            onClick={startListening}
+            title="Search by voice"
+            className={`w-9 h-9 flex items-center justify-center rounded-full border transition-colors ${
+              isListening
+                ? "bg-red-500 border-red-500 text-white animate-pulse"
+                : "border-neutral-200 dark:border-neutral-700 dark:text-white"
+            }`}
+          >
+            <Mic size={16} />
+          </button>
+        )}
+
         {searchText && <ClearSearchButton onClear={handleClear} />}
 
-        {/* Two plain controlled <select> elements — same "value comes
-            from state" pattern as any controlled input. */}
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
