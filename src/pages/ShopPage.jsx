@@ -82,7 +82,10 @@ export default function ShopPage() {
     return <p className="max-w-4xl mx-auto px-6 py-12 text-center text-neutral-400">Loading products...</p>;
   }
   if (error) {
-    return <p className="max-w-4xl mx-auto px-6 py-12 text-center text-red-500">{error}</p>;
+    // text-brand-600: same red family as the rest of the theme, instead
+    // of Tailwind's generic red-500, for a consistent "something's
+    // wrong" color across the whole app.
+    return <p className="max-w-4xl mx-auto px-6 py-12 text-center text-brand-600">{error}</p>;
   }
 
   return (
@@ -97,8 +100,11 @@ export default function ShopPage() {
             onClick={startListening}
             title="Search by voice"
             className={`w-9 h-9 flex items-center justify-center rounded-full border transition-colors ${
+              // bg-brand-600/border-brand-600 while actively listening —
+              // same red family as the rest of the theme, instead of
+              // Tailwind's generic red-500.
               isListening
-                ? "bg-red-500 border-red-500 text-white animate-pulse"
+                ? "bg-brand-600 border-brand-600 text-white animate-pulse"
                 : "border-neutral-200 dark:border-neutral-700 dark:text-white"
             }`}
           >
@@ -111,7 +117,9 @@ export default function ShopPage() {
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="text-sm border border-neutral-200 dark:border-neutral-700 dark:bg-neutral-800 dark:text-white rounded-lg px-3 py-2 capitalize"
+          // focus:border-brand-500: red focus color, matching SearchBar,
+          // instead of the browser's default blue outline.
+          className="text-sm border border-neutral-200 dark:border-neutral-700 dark:bg-neutral-800 dark:text-white rounded-lg px-3 py-2 capitalize focus:outline-none focus:border-brand-500"
         >
           {categories.map((c) => (
             <option key={c} value={c} className="capitalize">
@@ -123,7 +131,7 @@ export default function ShopPage() {
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
-          className="text-sm border border-neutral-200 dark:border-neutral-700 dark:bg-neutral-800 dark:text-white rounded-lg px-3 py-2"
+          className="text-sm border border-neutral-200 dark:border-neutral-700 dark:bg-neutral-800 dark:text-white rounded-lg px-3 py-2 focus:outline-none focus:border-brand-500"
         >
           <option value="default">Sort: default</option>
           <option value="price-asc">Price: low to high</option>

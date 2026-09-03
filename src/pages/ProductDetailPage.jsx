@@ -48,7 +48,7 @@ export default function ProductDetailPage() {
     return <p className="max-w-4xl mx-auto px-6 py-12 text-center text-neutral-400">Loading product...</p>;
   }
   if (error) {
-    return <p className="max-w-4xl mx-auto px-6 py-12 text-center text-red-500">{error}</p>;
+    return <p className="max-w-4xl mx-auto px-6 py-12 text-center text-brand-600">{error}</p>;
   }
 
   const wishlisted = isWishlisted(product.id);
@@ -70,12 +70,12 @@ export default function ProductDetailPage() {
             {/* Same wishlist toggle pattern as ProductCard, just styled
                 inline here instead of positioned absolutely. */}
             <button onClick={() => toggleWishlist(product.id)} className="shrink-0">
-              <Heart size={20} className={wishlisted ? "fill-red-500 text-red-500" : "text-neutral-300"} />
+              <Heart size={20} className={wishlisted ? "fill-brand-600 text-brand-600" : "text-neutral-300"} />
             </button>
           </div>
           <h1 className="text-xl font-semibold dark:text-white">{product.title}</h1>
           <StarRating rate={product.rating?.rate} count={product.rating?.count} />
-          <p className="text-2xl font-medium dark:text-white">${product.price.toFixed(2)}</p>
+          <p className="text-2xl font-medium text-brand-600 dark:text-brand-400">${product.price.toFixed(2)}</p>
           <p className="text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed">{product.description}</p>
 
           <div className="flex items-center gap-3 pt-2">
@@ -93,7 +93,7 @@ export default function ProductDetailPage() {
 
           <button
             onClick={handleAdd}
-            className="w-full bg-neutral-900 dark:bg-white dark:text-neutral-900 text-white text-sm py-3 rounded-lg hover:bg-neutral-700 dark:hover:bg-neutral-200 transition-colors"
+            className="w-full bg-brand-600 text-white text-sm py-3 rounded-lg hover:bg-brand-700 transition-colors"
           >
             Add {qty > 1 ? `${qty} ` : ""}to cart
           </button>
@@ -110,16 +110,16 @@ export default function ProductDetailPage() {
             value={reviewName}
             onChange={(e) => setReviewName(e.target.value)}
             placeholder="Your name"
-            className="w-full px-3 py-2 text-sm border border-neutral-200 dark:border-neutral-700 dark:bg-neutral-800 dark:text-white rounded-lg focus:outline-none focus:border-neutral-400"
+            className="w-full px-3 py-2 text-sm border border-neutral-200 dark:border-neutral-700 dark:bg-neutral-800 dark:text-white rounded-lg focus:outline-none focus:border-brand-500"
           />
           <textarea
             value={reviewText}
             onChange={(e) => setReviewText(e.target.value)}
             placeholder="Write a review..."
             rows={3}
-            className="w-full px-3 py-2 text-sm border border-neutral-200 dark:border-neutral-700 dark:bg-neutral-800 dark:text-white rounded-lg focus:outline-none focus:border-neutral-400"
+            className="w-full px-3 py-2 text-sm border border-neutral-200 dark:border-neutral-700 dark:bg-neutral-800 dark:text-white rounded-lg focus:outline-none focus:border-brand-500"
           />
-          <button type="submit" className="text-sm bg-neutral-900 dark:bg-white dark:text-neutral-900 text-white px-4 py-2 rounded-lg">
+          <button type="submit" className="text-sm bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-lg transition-colors">
             Post review
           </button>
         </form>

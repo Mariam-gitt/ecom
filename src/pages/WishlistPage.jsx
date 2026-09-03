@@ -14,7 +14,7 @@ export default function WishlistPage() {
     return <p className="max-w-4xl mx-auto px-6 py-12 text-center text-neutral-400">Loading...</p>;
   }
   if (error) {
-    return <p className="max-w-4xl mx-auto px-6 py-12 text-center text-red-500">{error}</p>;
+    return <p className="max-w-4xl mx-auto px-6 py-12 text-center text-brand-600">{error}</p>;
   }
 
   const wishlistedProducts = products.filter((p) => wishlistIds.includes(p.id));

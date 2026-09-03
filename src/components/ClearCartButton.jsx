@@ -8,7 +8,9 @@ export default function ClearCartButton() {
   return (
     <button
       onClick={() => dispatch({ type: "CLEAR" })}
-      className="mt-3 text-xs text-neutral-400 hover:text-red-500 dark:text-neutral-500"
+      // hover:text-brand-600: same red family as everything else in the
+      // app, instead of Tailwind's generic red-500.
+      className="mt-3 text-xs text-neutral-400 hover:text-brand-600 dark:text-neutral-500"
     >
       Clear cart
     </button>

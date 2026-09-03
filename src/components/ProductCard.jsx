@@ -23,7 +23,11 @@ function ProductCardImpl({ product }) {
   }
 
   return (
-    <div className="relative bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-xl p-4 flex flex-col gap-3">
+    // hover:border-brand-200/dark:hover:border-brand-900 + hover:shadow-md:
+    // a soft red-tinted border and lift on hover, purely visual feedback
+    // that "this card is interactive" — transition-all makes both the
+    // border color and shadow change smoothly instead of snapping.
+    <div className="relative bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 hover:border-brand-200 dark:hover:border-brand-900 hover:shadow-md rounded-xl p-4 flex flex-col gap-3 transition-all">
       {/* Wishlist heart button — positioned absolutely so it floats in
           the top-right corner over the card, independent of the normal
           layout flow. stopPropagation prevents the click from also
@@ -38,10 +42,11 @@ function ProductCardImpl({ product }) {
       >
         <Heart
           size={16}
-          // Filled red heart if wishlisted, plain outline otherwise —
+          // Filled brand-red heart if wishlisted, plain outline otherwise —
           // exactly the same "conditional styling based on state"
-          // pattern as the Add button's checkmark.
-          className={wishlisted ? "fill-red-500 text-red-500" : "text-neutral-400"}
+          // pattern as the Add button's checkmark. brand-600 keeps this
+          // in sync with every other red in the app (see tailwind.config.js).
+          className={wishlisted ? "fill-brand-600 text-brand-600" : "text-neutral-400"}
         />
       </button>
 
@@ -55,10 +60,15 @@ function ProductCardImpl({ product }) {
       {/* Star rating, straight from the API's product.rating object */}
       <StarRating rate={product.rating?.rate} count={product.rating?.count} />
 
-      <p className="text-neutral-500 dark:text-neutral-400 text-sm">${product.price.toFixed(2)}</p>
+      {/* Price in brand red + semibold: the one number on the card a
+          shopper actually needs to notice, so it gets the accent color
+          instead of blending into the neutral gray text around it. */}
+      <p className="text-brand-600 dark:text-brand-400 text-sm font-semibold">${product.price.toFixed(2)}</p>
       <button
         onClick={handleAdd}
-        className="mt-auto flex items-center justify-center gap-1.5 bg-neutral-900 dark:bg-white dark:text-neutral-900 text-white text-sm py-2 rounded-lg hover:bg-neutral-700 dark:hover:bg-neutral-200 transition-colors"
+        // Same brand-600/brand-700 pair as the cart button in Header —
+        // one consistent "primary action" color, no dark: overrides needed.
+        className="mt-auto flex items-center justify-center gap-1.5 bg-brand-600 text-white text-sm py-2 rounded-lg hover:bg-brand-700 transition-colors"
       >
         {inCart ? (
           <>

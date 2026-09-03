@@ -67,7 +67,7 @@ export default function CheckoutForm({ cart, totalPrice }) {
         value={formData.name}
         onChange={handleChange}
         placeholder="Full name"
-        className="w-full px-3 py-2 text-sm border border-neutral-200 dark:border-neutral-700 dark:bg-neutral-900 dark:text-white rounded-lg focus:outline-none focus:border-neutral-400"
+        className="w-full px-3 py-2 text-sm border border-neutral-200 dark:border-neutral-700 dark:bg-neutral-900 dark:text-white rounded-lg focus:outline-none focus:border-brand-500"
       />
       <input
         name="email"
@@ -75,12 +75,12 @@ export default function CheckoutForm({ cart, totalPrice }) {
         value={formData.email}
         onChange={handleChange}
         placeholder="Email address"
-        className="w-full px-3 py-2 text-sm border border-neutral-200 dark:border-neutral-700 dark:bg-neutral-900 dark:text-white rounded-lg focus:outline-none focus:border-neutral-400"
+        className="w-full px-3 py-2 text-sm border border-neutral-200 dark:border-neutral-700 dark:bg-neutral-900 dark:text-white rounded-lg focus:outline-none focus:border-brand-500"
       />
-      {error && <p className="text-xs text-red-500">{error}</p>}
+      {error && <p className="text-xs text-brand-600">{error}</p>}
       <button
         type="submit"
-        className="w-full bg-neutral-900 dark:bg-white dark:text-neutral-900 text-white text-sm py-2 rounded-lg hover:bg-neutral-700 dark:hover:bg-neutral-200 transition-colors"
+        className="w-full bg-brand-600 text-white text-sm py-2 rounded-lg hover:bg-brand-700 transition-colors"
       >
         Place order — ${totalPrice}
       </button>

@@ -30,9 +30,12 @@ export default function CheckoutPage() {
                 <p className="text-sm dark:text-white">${(item.price * item.qty).toFixed(2)}</p>
               </div>
             ))}
+            {/* text-brand-600: the total gets the accent color, same
+                convention as the per-item price on ProductCard — it's
+                the one number here worth drawing the eye to. */}
             <div className="flex items-center justify-between p-3 font-medium">
               <span className="dark:text-white">Total</span>
-              <span className="dark:text-white">${totalPrice}</span>
+              <span className="text-brand-600 dark:text-brand-400">${totalPrice}</span>
             </div>
           </div>
         )}

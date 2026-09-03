@@ -39,7 +39,9 @@ export default function CartPanel() {
           </button>
           <button
             onClick={() => dispatch({ type: "REMOVE", id: item.id })}
-            className="w-7 h-7 flex items-center justify-center rounded-full text-red-500 hover:bg-red-50 ml-1"
+            // text-brand-600/hover:bg-brand-50: same red family as the
+            // rest of the app instead of Tailwind's default red-500/red-50.
+            className="w-7 h-7 flex items-center justify-center rounded-full text-brand-600 hover:bg-brand-50 dark:hover:bg-brand-800/20 ml-1"
           >
             <Trash2 size={13} />
           </button>

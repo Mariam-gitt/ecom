@@ -31,7 +31,9 @@ export default function CartPage() {
         {cart.length > 0 && (
           <button
             onClick={handleCheckout}
-            className="bg-neutral-900 dark:bg-white dark:text-neutral-900 text-white text-sm px-4 py-2 rounded-lg hover:bg-neutral-700 dark:hover:bg-neutral-200 transition-colors"
+            // Same brand-600/brand-700 pair used for every other primary
+            // button in the app (Header cart pill, ProductCard Add, etc).
+            className="bg-brand-600 text-white text-sm px-4 py-2 rounded-lg hover:bg-brand-700 transition-colors"
           >
             Proceed to checkout
           </button>
